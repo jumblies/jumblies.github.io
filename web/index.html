@@ -1,0 +1,304 @@
+
+ <!DOCTYPE html>
+<html>
+  <head>
+	 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js"></script>
+    <meta charset="UTF-8">
+		<title>
+			Yield Curve Chart
+		</title>
+  </head>
+  <body>
+	  <div style="text-align:center;">
+	  <h1>US Treasury Yield Curve</h1>
+	  <h2>Fresh Data</h2>
+	  <h3><div id="loading">Please Wait While Data is Fetched</div></h3>
+	  <h3>A very ugly javascript implementation of current US Treasury Yield Curve XML data<br>
+	  I should have done this with python...</h3>
+	  </div>
+<!--
+	  <h1 style="hidden;">  REMEMBER TO START PYTHON WEBSERVER WITH <br>
+	  python3 -m http.server
+</h1>
+-->
+<canvas id="myChart" width="1000px"></canvas>
+<canvas id="myChart2" width="100px" ></canvas>
+
+<script>
+//Real URL
+var url = 'https://cors-anywhere.herokuapp.com/https://cors-anywhere.herokuapp.com/https://www.treasury.gov/resource-center/data-chart-center/interest-rates/Datasets/yield.xml';
+//Testing URL
+//~ var url = "http://localhost:8000/yield.xml";
+var xml_data;
+var txt;
+var date_data;
+
+var tag_list_last = [];
+var rate_data_penultimate = [];
+var rate_data_first = [];
+var rate_data_last = [];
+var x_list = [1, 2, 3, 6, 12, 24, 36, 60, 84, 120, 240, 360];
+
+
+fetch(url)
+	.then(response => response.text())
+	.then(str => (new DOMParser()).parseFromString(str, "text/xml"))
+	.then(data => {xml_data   = (data.getElementsByTagName("G_NEW_DATE")); 
+		} )
+	
+	//Get first date in dataset (usu 2 wks)
+	.then(() => {first_date =(xml_data[0]); 
+		first_date_label = first_date.firstElementChild.innerHTML;
+		var nodelist = (first_date.childNodes[2].firstChild.childNodes);
+		//~ console.log(nodelist.length);
+			for (var i = 0; i < nodelist.length - 2; i++){
+			rate_data_first.push(nodelist[i].innerHTML);
+			};
+			first_xy_data = x_list.map((x, i) => {
+			  return {
+				x: x,
+				y: rate_data_first[i]};
+				});
+			
+			console.log(first_xy_data);
+		})
+
+	// Get Penultimate Data
+	.then(() => {penultimate_date =(xml_data[xml_data.length - 2]);
+				penultimate_date_label = penultimate_date.firstElementChild.innerHTML;
+
+				var nodelist = (penultimate_date.childNodes[2].firstChild.childNodes);
+				for (var i = 0; i < nodelist.length - 2; i++){
+					rate_data_penultimate.push(nodelist[i].innerHTML);
+					};
+				penultimate_xy_data = x_list.map((x, i) => {
+							  return {
+								x: x,
+								y: rate_data_penultimate[i]};
+								});
+				console.log(penultimate_xy_data);
+	})
+	.then(() => {last_date =(xml_data[xml_data.length - 1]);
+					last_date_label = last_date.firstElementChild.innerHTML;
+					var nodelist = (last_date.childNodes[2].firstChild.childNodes);
+					for (var i = 0; i < nodelist.length - 2; i++){
+						tag_list_last.push(nodelist[i].tagName.slice(3,));
+						rate_data_last.push(nodelist[i].innerHTML);
+						};
+					last_xy_data = x_list.map((x, i) => {
+								  return {
+									x: x,
+									y: rate_data_last[i]};
+									});
+			console.log(last_xy_data);
+		})
+	.then(() => {
+			function draw_chart(){
+			var ctx = document.getElementById("myChart");
+			var myChart = new Chart(ctx, {
+			type: 'scatter',
+			data: {
+				//~ labels: tag_list_last,
+				//~ labels: [1, 2, 3, 6, 12, 24, 36, 60, 84, 120, 240, 360],
+				datasets: [{
+					//~ label: last_xy_data,
+					label: last_date_label,
+					fill: true,
+					borderColor: "#85bb65", // The main line color
+					//~ data: rate_data_last,
+					data: last_xy_data,
+					backgroundColor: "rgba(133, 187, 101, .5)",
+					borderColor: "rgba(133, 187, 101, 1)",
+					borderWidth: 5, 
+					showLine: true,
+				},
+				{
+					label: penultimate_date_label,
+					fill: false,
+					borderColor: "red", // The main line color
+					data: penultimate_xy_data,
+					backgroundColor: "rgba(255, 0, 0, .5)",
+					showLine: true,
+					borderWidth: 2
+				},
+				{
+					label: first_date_label,
+					fill: true,
+					borderColor: "black", // The main line color
+					data: first_xy_data,
+					backgroundColor: "rgba(0, 0, 0, .5)",
+					showLine: true,
+					borderWidth: 2
+				}
+				]
+			},
+			options: {
+				scales: {
+					      xAxes: [{
+							type: 'linear',
+							position: 'bottom',
+							ticks: {
+							  //~ suggestedMin: 0,
+							  //~ suggestedMax: 360, 
+							  stepSize: 3,
+								callback: function(label, index, labels) {
+									//~ console.log(label);
+									switch (label) {
+										case 0:
+											return 'ZERO';
+										case 3:
+											return '3M';
+										case 6:
+											return '6M';
+										case 12:
+											return 'ONE';
+										case 24:
+											return 'TWO';
+										case 36:
+											return 'THREE';
+										case 48:
+											return 'FOUR';
+										case 60:
+											return 'FIVE';
+										case 84:
+											return 'SEVEN';
+										case 120:
+											return 'TEN';
+										case 240:
+											return 'TWENTY';
+										case 360:
+											return 'THIRTY';
+									}
+								}
+							},
+						  }],
+					yAxes: [{
+						ticks: {
+							//~ suggestedMin: 1,
+							//~ suggestedMax: 3, 
+							beginAtZero: false
+							
+						}
+					}]
+				}
+			}
+		});
+	}
+		draw_chart();
+		})
+		.then(() => {
+			function draw_chart(){
+			var ctx = document.getElementById("myChart2");
+			var myChart = new Chart(ctx, {
+			type: 'scatter',
+			data: {
+				//~ labels: tag_list_last,
+				//~ labels: tag_list_last,
+				labels: [1, 2, 3, 6, 12, 24, 36, 60, 84, 120, 240, 360],
+				datasets: [{
+					//~ label: last_xy_data,
+					label: last_date_label,
+					fill: true,
+					borderColor: "#85bb65", // The main line color
+					//~ data: rate_data_last,
+					data: last_xy_data,
+					backgroundColor: "rgba(133, 187, 101, .5)",
+					borderColor: "rgba(133, 187, 101, 1)",
+					borderWidth: 5, 
+					showLine: true,
+				},
+				{
+					label: penultimate_date_label,
+					fill: false,
+					borderColor: "red", // The main line color
+					data: penultimate_xy_data,
+					backgroundColor: "rgba(255, 0, 0, .5)",
+					showLine: true,
+					borderWidth: 2
+				},
+				{
+					label: first_date_label,
+					fill: true,
+					borderColor: "black", // The main line color
+					data: first_xy_data,
+					backgroundColor: "rgba(0, 0, 0, .5)",
+					showLine: true,
+					borderWidth: 2
+				}
+				]
+			},
+			options: {
+				scales: {
+					      xAxes: [{
+							type: 'category',
+							position: 'bottom',
+							ticks: {
+							  //~ suggestedMin: 0,
+							  //~ suggestedMax: 360, 
+							  stepSize: 3,
+								callback: function(label, index, labels) {
+									//~ console.log(label);
+									switch (label) {
+										case 0:
+											return 'ZERO';
+										case 1:
+											return '1M';
+										case 2:
+											return '2M';
+										case 3:
+											return '3M';
+										case 6:
+											return '6M';
+										case 12:
+											return 'ONE';
+										case 24:
+											return 'TWO';
+										case 36:
+											return 'THREE';
+										case 48:
+											return 'FOUR';
+										case 60:
+											return 'FIVE';
+										case 84:
+											return 'SEVEN';
+										case 120:
+											return 'TEN';
+										case 240:
+											return 'TWENTY';
+										case 360:
+											return 'THIRTY';
+									}
+								}
+							},
+						  }],
+					yAxes: [{
+						ticks: {
+							//~ suggestedMin: 1,
+							//~ suggestedMax: 3, 
+							beginAtZero: false
+							
+						}
+					}]
+				}
+			}
+		});
+	}
+		draw_chart();
+		})
+	.then(data => {document.getElementById("loading").style.display = 'none';})
+
+
+
+
+
+
+
+</script>	
+
+
+
+
+
+
+</body>
+</html>
