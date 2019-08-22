@@ -1,7 +1,7 @@
 version: '3'
 services:
   yieldcurve:
-    image: flashspys/nginx-static
+    image: nginx_log:latest
     ports:
       - 6666:80
     volumes: 
