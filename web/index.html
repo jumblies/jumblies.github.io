@@ -12,8 +12,9 @@
 	  <div style="text-align:center;">
 	  <h1>US Treasury Yield Curve</h1>
 	  <h2>Fresh Data</h2>
-	  <h3><div id="loading">Please Wait While Data is Fetched</div></h3>
+	  <h3><div id="loading" style="color:red;">Please Wait While Data is Fetched</div></h3>
 	  <h3>A very ugly javascript implementation of current US Treasury Yield Curve XML data<br>
+	  <br>Created mainly because I got sick of looking at popups on every site like GuruFocus. Arghh.<br>
 	  I should have done this with python...</h3>
 	  </div>
 <!--
@@ -21,17 +22,19 @@
 	  python3 -m http.server
 </h1>
 -->
-<canvas id="myChart" width="1000px"></canvas>
-<canvas id="myChart2" width="100px" ></canvas>
+<canvas id="myChart" style="position: relative; height:40vh; width:95vw"></canvas>
+<canvas id="myChart2" style="position: relative; height:40vh; width:95vw" ></canvas>
 
 <script>
 //Real URL
-var url = 'https://cors-anywhere.herokuapp.com/https://cors-anywhere.herokuapp.com/https://www.treasury.gov/resource-center/data-chart-center/interest-rates/Datasets/yield.xml';
+var url = 'https://cors-anywhere.herokuapp.com/https://www.treasury.gov/resource-center/data-chart-center/interest-rates/Datasets/yield.xml';
+//~ var url = 'https://www.treasury.gov/resource-center/data-chart-center/interest-rates/Datasets/yield.xml';
 //Testing URL
 //~ var url = "http://localhost:8000/yield.xml";
 var xml_data;
 var txt;
 var date_data;
+var first_date;
 
 var tag_list_last = [];
 var rate_data_penultimate = [];
@@ -39,11 +42,13 @@ var rate_data_first = [];
 var rate_data_last = [];
 var x_list = [1, 2, 3, 6, 12, 24, 36, 60, 84, 120, 240, 360];
 
-
-fetch(url)
+fetch(url, 
+//~ {mode:'cors'}
+)
 	.then(response => response.text())
 	.then(str => (new DOMParser()).parseFromString(str, "text/xml"))
 	.then(data => {xml_data   = (data.getElementsByTagName("G_NEW_DATE")); 
+			//~ console.log(xml_data);
 		} )
 	
 	//Get first date in dataset (usu 2 wks)
@@ -133,14 +138,16 @@ fetch(url)
 				]
 			},
 			options: {
+				responsive: true,
 				scales: {
 					      xAxes: [{
 							type: 'linear',
 							position: 'bottom',
 							ticks: {
-							  //~ suggestedMin: 0,
-							  //~ suggestedMax: 360, 
-							  stepSize: 3,
+								display: true, 
+								fontColor: "#85bb65",
+								fontSize: 10, 
+							    stepSize: 3,
 								callback: function(label, index, labels) {
 									//~ console.log(label);
 									switch (label) {
@@ -170,12 +177,14 @@ fetch(url)
 											return 'THIRTY';
 									}
 								}
+							//~ }
 							},
 						  }],
 					yAxes: [{
 						ticks: {
-							//~ suggestedMin: 1,
-							//~ suggestedMax: 3, 
+								display: true, 
+								fontColor: "#85bb65",
+								fontSize: 16, 
 							beginAtZero: false
 							
 						}
@@ -228,14 +237,16 @@ fetch(url)
 				]
 			},
 			options: {
+				responsive: true,
 				scales: {
 					      xAxes: [{
 							type: 'category',
 							position: 'bottom',
 							ticks: {
-							  //~ suggestedMin: 0,
-							  //~ suggestedMax: 360, 
-							  stepSize: 3,
+								display: true, 
+								fontColor: "#85bb65",
+								fontSize: 10, 
+							    stepSize: 3,
 								callback: function(label, index, labels) {
 									//~ console.log(label);
 									switch (label) {
@@ -273,8 +284,9 @@ fetch(url)
 						  }],
 					yAxes: [{
 						ticks: {
-							//~ suggestedMin: 1,
-							//~ suggestedMax: 3, 
+								display: true, 
+								fontColor: "#85bb65",
+								fontSize: 16, 
 							beginAtZero: false
 							
 						}
@@ -294,9 +306,15 @@ fetch(url)
 
 
 </script>	
-<div id="sfcxql9kqggrqseahps8xpfclp4uz8cya96"></div>
-<script type="text/javascript" src="https://counter7.wheredoyoucomefrom.ovh/private/counter.js?c=xql9kqggrqseahps8xpfclp4uz8cya96&down=async" async></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-146364049-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'UA-146364049-1');
+</script>
 
 
 
