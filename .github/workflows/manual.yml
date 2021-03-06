@@ -8,5 +8,5 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: my-artifact
-        path: jumblies.github.io/yieldcurve.xml
+        path: data/yieldcurve.xml
 #         args: https://www.treasury.gov/resource-center/data-chart-center/interest-rates/Datasets/yield.xml --output 
