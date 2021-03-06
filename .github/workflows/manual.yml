@@ -6,4 +6,4 @@ jobs:
     - name: curl
       uses: wei/curl@master
       with:
-        args: https://www.treasury.gov/resource-center/data-chart-center/interest-rates/Datasets/yield.xml
+        args: https://www.treasury.gov/resource-center/data-chart-center/interest-rates/Datasets/yield.xml --output yieldcurve.xml
