@@ -1,9 +1,12 @@
 on: push
 jobs:
-  curl:
-    runs-on: ubuntu-latest
+  run_tests:
+    runs-on: ubuntu-20.04
     steps:
-    - name: curl
-      uses: wei/curl@master
+    - name: add icon
+      run:  curl https://www.treasury.gov/resource-center/data-chart-center/interest-rates/Datasets/yield.xml > yieldcurve.xml
+    - uses: actions/upload-artifact@v2
       with:
-        args: https://www.treasury.gov/resource-center/data-chart-center/interest-rates/Datasets/yield.xml --output yieldcurve.xml
+        name: my-artifact
+        path: yieldcurve.xml
+#         args: https://www.treasury.gov/resource-center/data-chart-center/interest-rates/Datasets/yield.xml --output 
