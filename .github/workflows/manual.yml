@@ -1,9 +1,9 @@
 on: push
 jobs:
-  wget:
+  curl:
     runs-on: ubuntu-latest
     steps:
-    - name: wget
-      uses: wei/wget@v1
+    - name: curl
+      uses: wei/curl@master
       with:
-        args: -O sample.html https://httpbin.org/html
+        args: https://www.treasury.gov/resource-center/data-chart-center/interest-rates/Datasets/yield.xml
