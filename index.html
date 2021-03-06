@@ -57,7 +57,7 @@ var x_list = [1, 2, 3, 6, 12, 24, 36, 60, 84, 120, 240, 360];
 //~ myheaders.append('Content-Type', 'text/xml');
 //~ console.log(myheaders.get('Access-Control-Allow-Origin'));
 
-fetch(url , {headers: {mode: 'cors',"Access-Control-Allow-Origin: *"}}
+fetch(url , {headers: {mode: 'cors','Access-Control-Allow-Origin: *'}}
 		)
 	.then(response => response.text())
 	.then(str => (new DOMParser()).parseFromString(str, "text/xml"))
