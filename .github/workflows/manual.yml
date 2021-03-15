@@ -5,7 +5,7 @@ jobs:
     steps:
     - name: download xml
       run:  wget https://www.treasury.gov/resource-center/data-chart-center/interest-rates/Datasets/yield.xml > yieldcurve.xml
-    - uses: actions/upload-artifact@v2
+    - uses: actions/download-artifact@v2
       with:
         name: my-artifact
         path: data/yieldcurve.xml
