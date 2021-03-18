@@ -1,0 +1,8 @@
+jobs:
+  wget:
+    runs-on: ubuntu-latest
+    steps:
+    - name: wget
+      uses: wei/wget@v1
+      with:
+        args: -qO- https://httpbin.org/get
