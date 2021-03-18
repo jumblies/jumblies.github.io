@@ -9,7 +9,7 @@ jobs:
 #        args: -qO- https://httpbin.org/get
          args: https://www.treasury.gov/resource-center/data-chart-center/interest-rates/Datasets/yield.xml
          #--output
-     - shell: bash
+    - shell: bash
         run: |
           expr 1 + 1 > yield.xml
     - name: Upload output file
