@@ -1,12 +1,10 @@
 on: push
 jobs:
-  run_tests:
-    runs-on: ubuntu-20.04
+  wget:
+    runs-on: ubuntu-latest
     steps:
-    - name: download xml
-      run:  wget https://www.treasury.gov/resource-center/data-chart-center/interest-rates/Datasets/yield.xml > yieldcurve.xml
-    - uses: actions/download-artifact@v2
+    - name: wget
+      uses: wei/wget@v1
       with:
-        name: my-artifact
-        path: data/yieldcurve.xml
-#         args: https://www.treasury.gov/resource-center/data-chart-center/interest-rates/Datasets/yield.xml --output 
+#        args: -qO- https://httpbin.org/get
+         args: https://www.treasury.gov/resource-center/data-chart-center/interest-rates/Datasets/yield.xml --output 
