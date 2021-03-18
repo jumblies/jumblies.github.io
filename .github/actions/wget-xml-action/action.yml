@@ -3,6 +3,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: wget
+      description: grabs xml
       uses: wei/wget@v1
       with:
         args: -qO- https://httpbin.org/get
