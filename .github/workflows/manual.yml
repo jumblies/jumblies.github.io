@@ -10,7 +10,7 @@ jobs:
          args: https://www.treasury.gov/resource-center/data-chart-center/interest-rates/Datasets/yield.xml
          #--output 
     - name: Upload output file
-        uses: actions/upload-artifact@v2
-        with:
-          name: output-xml-file
-          path: yield.xml
+      uses: actions/upload-artifact@v2
+      with:
+        name: output-xml-file
+        path: yield.xml
