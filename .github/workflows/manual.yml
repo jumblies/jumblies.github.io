@@ -12,11 +12,11 @@ jobs:
     - shell: bash
       run: |
         cat yield.xml
-#     - name: Upload output file
-#       uses: actions/upload-artifact@v2
-#       with:
-#         name: output-xml-file
-#         path: yield
+    - name: Upload output file
+      uses: actions/upload-artifact@v2
+      with:
+        name: output-xml-file
+        path: ./output-xml-file
     - name: save the xml
       uses: actions/download-artifact@v2
       with:
