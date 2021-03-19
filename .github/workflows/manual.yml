@@ -20,5 +20,5 @@ jobs:
     - name: save the xml
       uses: actions/download-artifact@v2
       with:
-        name: yield.xml
-        path: data
+        name: output-xml-file
+        path: data/yield.xml
