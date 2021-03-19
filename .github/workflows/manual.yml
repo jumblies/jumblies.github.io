@@ -11,7 +11,7 @@ jobs:
          #--output
     - shell: bash
       run: |
-        expr 1 + 1 > yield.xml
+        cat yield.xml
     - name: Upload output file
       uses: actions/upload-artifact@v2
       with:
