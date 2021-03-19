@@ -17,3 +17,8 @@ jobs:
       with:
         name: output-xml-file
         path: ./yield.xml
+    - name: save the xml
+      uses: actions/download-artifact@v2
+      with:
+        name: yield.xml
+        path: data
